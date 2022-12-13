@@ -12,12 +12,12 @@ services:
       - ./addons:/mnt/extra-addons
     environment:
       - HOST=db
-	  - PORT=5432
-	  - USER=odoo
-	  - PASSWORD=${DB_PASSWORD:?err}
-	links:
-	  - db
-	restart: always
+      - PORT=5432
+      - USER=odoo
+      - PASSWORD=${DB_PASSWORD:?err}
+    links:
+      - db
+    restart: always
   db:
     image: postgres:13
     environment:
@@ -27,4 +27,4 @@ services:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - ./db:/var/lib/postgresql/data/pgdata
-	restart: always
+    restart: always
