@@ -1,4 +1,9 @@
 version: '3.1'
+
+#volumes:
+#  odoo:
+#  db:
+
 services:
   web:
     image: odoo:16.0
@@ -7,15 +12,16 @@ services:
     ports:
       - "${HTTP_PORT:?err}:8069"
     volumes:
-      - odoo-web-data:/var/lib/odoo
-#       If you want to use a custom config file.
+#      - odoo:/var/lib/odoo
+      - ./odoo-web/_data:/var/lib/odoo
+#	If you want to use a custom config file.
 #      - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
     environment:
       - HOST=db
       - PORT=5432
       - USER=odoo
-      - PASSWORD=${DB_PASSWORD:?err}
+      - PASSWORD=${DB_PASSWORD:-odoo}
     links:
       - db
     restart: always
@@ -23,12 +29,10 @@ services:
     image: postgres:13
     environment:
       - POSTGRES_DB=postgres
-      - POSTGRES_PASSWORD=${DB_PASSWORD:?err}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-odoo}
       - POSTGRES_USER=odoo
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - oodo-db:/var/lib/postgresql/data/pgdata
+      - ./db/_data:/var/lib/postgresql/data/pgdata
+#      - db:/var/lib/postgresql/data/pgdata
     restart: always
-volumes:
-  oodo-web-data:
-  oodo-db:
